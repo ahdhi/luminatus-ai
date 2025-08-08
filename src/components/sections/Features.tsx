@@ -164,7 +164,7 @@ export default function Features() {
   }
 
   return (
-    <section id="features" className="py-32 relative overflow-hidden">
+    <section id="features" className="py-12 sm:py-16 lg:py-20 xl:py-32 relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 bg-gradient-to-b from-gray-900/50 via-black to-gray-900/50" />
       <div className="absolute inset-0 grid-pattern opacity-5" />
@@ -173,15 +173,15 @@ export default function Features() {
       <div className="absolute top-20 left-10 w-32 h-32 bg-neon-blue/10 rounded-full blur-3xl animate-float" />
       <div className="absolute bottom-20 right-10 w-40 h-40 bg-neon-purple/10 rounded-full blur-3xl animate-float animation-delay-400" />
 
-      <div className="relative z-10 container mx-auto px-6">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <FadeIn>
-          <div className="text-center mb-20">
+          <div className="text-center mb-12 sm:mb-16 lg:mb-20">
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-4 py-2 mb-6 glass-effect rounded-full border border-neon-blue/30"
+              className="inline-flex items-center gap-2 px-3 py-2 mb-4 sm:mb-6 glass-effect rounded-full border border-neon-blue/30"
             >
               <Sparkles className="w-4 h-4 text-neon-blue" />
               <span className="text-sm text-gray-300">Revolutionary Features</span>

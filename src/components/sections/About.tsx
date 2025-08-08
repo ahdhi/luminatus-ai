@@ -65,7 +65,7 @@ export default function About() {
     <section
       id="about"
       ref={containerRef}
-      className="relative py-16 overflow-hidden"
+      className="relative py-12 sm:py-16 lg:py-20 overflow-hidden"
     >
       {/* Background Effects */}
       <div className="absolute inset-0">
@@ -75,20 +75,20 @@ export default function About() {
         </div>
       </div>
 
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <FadeIn duration={0.4} delay={0} once={false}>
-          <div className="text-center mb-20">
+          <div className="text-center mb-12 sm:mb-16 lg:mb-20">
             <motion.span
               initial={{ opacity: 0, scale: 0.8 }}
               animate={isInView ? { opacity: 1, scale: 1 } : {}}
               transition={{ duration: 0.3 }}
-              className="inline-block px-4 py-2 mb-6 text-sm font-medium text-neon-blue border border-neon-blue/30 rounded-full glass-effect"
+              className="inline-block px-3 py-2 mb-4 sm:mb-6 text-xs sm:text-sm font-medium text-neon-blue border border-neon-blue/30 rounded-full glass-effect"
             >
               ABOUT LUMINATUS
             </motion.span>
             
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-display font-bold mb-4 sm:mb-6">
               <motion.span
                 initial={{ opacity: 0, y: 20 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -99,12 +99,12 @@ export default function About() {
               </motion.span>
               <AITextReveal 
                 text="Artificial Intelligence" 
-                className="block mt-2 text-4xl md:text-5xl lg:text-6xl font-display font-bold"
+                className="block mt-2 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-display font-bold"
                 delay={0.2}
               />
             </h2>
             
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-3xl mx-auto px-4 sm:px-0">
               We&apos;re not just building AI systems; we&apos;re crafting the cognitive infrastructure 
               that will power tomorrow&apos;s innovations and unlock human potential at an unprecedented scale.
             </p>
@@ -112,7 +112,7 @@ export default function About() {
         </FadeIn>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-16 lg:mb-20">
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}

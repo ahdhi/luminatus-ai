@@ -125,14 +125,14 @@ export default function Services() {
     <section
       id="services"
       ref={containerRef}
-      className="relative py-8 overflow-hidden"
+      className="relative py-12 sm:py-16 lg:py-20 overflow-hidden"
     >
       {/* Background */}
       <div className="absolute inset-0">
         <div className="absolute inset-0 bg-gradient-to-b from-black via-purple-950/5 to-black" />
       </div>
 
-      <div className="container mx-auto px-6 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}

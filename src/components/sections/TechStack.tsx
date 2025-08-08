@@ -129,23 +129,23 @@ export default function TechStack() {
   }
 
   return (
-    <section id="tech" className="py-16 relative overflow-hidden">
+    <section id="tech" className="py-12 sm:py-16 lg:py-20 xl:py-32 relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900/50 to-black" />
       <div className="absolute inset-0 grid-pattern opacity-5" />
 
-      <div className="relative z-10 container mx-auto px-6">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <FadeIn>
-          <div className="text-center mb-20">
+          <div className="text-center mb-12 sm:mb-16 lg:mb-20">
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-4 py-2 mb-6 glass-effect rounded-full border border-neon-blue/30"
+              className="inline-flex items-center gap-2 px-3 py-2 mb-4 sm:mb-6 glass-effect rounded-full border border-neon-blue/30"
             >
               <Cpu className="w-4 h-4 text-neon-blue" />
-              <span className="text-sm text-gray-300">Cutting-Edge Technology</span>
+              <span className="text-xs sm:text-sm text-gray-300">Cutting-Edge Technology</span>
             </motion.div>
             
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6">
