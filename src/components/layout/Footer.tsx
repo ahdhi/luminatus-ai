@@ -54,12 +54,12 @@ export default function Footer() {
       {/* Background Pattern */}
       <div className="absolute inset-0 grid-pattern opacity-5" />
       
-      <div className="relative z-10 container mx-auto px-6">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6">
         {/* Main Footer Content */}
-        <div className="py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-12">
+        <div className="py-12 sm:py-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-12">
             {/* Brand Column */}
-            <div className="lg:col-span-2">
+            <div className="sm:col-span-2 lg:col-span-2">
               <div className="mb-6">
                 <Link href="/" className="inline-flex items-center space-x-3 group">
                   {/* Custom Logo with Spinning Ring */}
@@ -77,7 +77,7 @@ export default function Footer() {
                       />
                     </div>
                   </div>
-                  <span className="text-2xl font-display font-bold bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent">
+                  <span className="text-xl sm:text-2xl font-display font-bold bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent">
                     LUMINATUS AI
                   </span>
                 </Link>

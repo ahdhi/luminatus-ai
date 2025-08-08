@@ -39,7 +39,7 @@ export default function Header() {
           : 'py-6 bg-transparent'
       )}
     >
-      <nav className="container mx-auto px-6">
+      <nav className="container mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="relative group cursor-link" data-cursor-text="🏠">
@@ -67,10 +67,10 @@ export default function Header() {
               
               {/* Logo Text */}
               <div className="flex flex-col">
-                <span className="text-2xl font-display font-bold bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent">
+                <span className="text-xl md:text-2xl font-display font-bold bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent">
                   LUMINATUS AI
                 </span>
-                <span className="text-xs text-gray-400 tracking-wider">
+                <span className="hidden sm:block text-xs text-gray-400 tracking-wider">
                   WHERE INTELLIGENCE BECOMES INFINITE
                 </span>
               </div>
