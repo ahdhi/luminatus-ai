@@ -1,26 +1,243 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --primary-color: #00d9ff;
+    --secondary-color: #a855f7;
+    --accent-color: #ec4899;
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth; /* Use native smooth scrolling */
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    /* Optimize for smooth scrolling performance */
+    overscroll-behavior: none;
+    scroll-padding-top: 80px;
+    /* Performance optimizations */
+    height: 100%;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-black text-white overflow-x-hidden font-sans;
+    background: radial-gradient(ellipse at top, #0d1117 0%, #000000 100%);
+    font-feature-settings: 'rlig' 1, 'calt' 1, 'ss01' 1;
+    text-rendering: optimizeSpeed;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.01em;
+    /* Smooth scrolling optimizations */
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    /* Ensure proper layout with fixed header */
+    position: relative;
+  }
+
+  /* Enhanced Typography */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+    font-feature-settings: 'ss01' 1, 'ss02' 1;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+
+  h1 {
+    @apply text-5xl md:text-6xl lg:text-7xl font-bold;
+    letter-spacing: -0.03em;
+  }
+
+  h2 {
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold;
+    letter-spacing: -0.025em;
+  }
+
+  h3 {
+    @apply text-2xl md:text-3xl lg:text-4xl font-semibold;
+  }
+
+  p {
+    line-height: 1.6;
+    letter-spacing: -0.005em;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-black;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gradient-to-b from-neon-blue to-neon-purple rounded-full;
+  }
+
+  /* Selection */
+  ::selection {
+    @apply bg-neon-blue/30 text-white;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .glow-text {
+    @apply text-transparent bg-clip-text bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink;
+    filter: drop-shadow(0 0 20px rgba(0, 217, 255, 0.5));
+  }
+
+  .glass-effect {
+    @apply backdrop-blur-lg bg-white/5 border border-white/10;
+    /* Eliminate jitter from backdrop filters */
+    transform: none;
+    will-change: auto;
+    contain: layout style;
+    isolation: isolate;
+  }
+
+  .neon-border {
+    @apply relative;
+    box-shadow: 
+      0 0 20px rgba(0, 217, 255, 0.5),
+      inset 0 0 20px rgba(0, 217, 255, 0.1);
+    /* Optimize box-shadow rendering */
+    contain: layout style;
+  }
+
+  .grid-pattern {
+    background-image: 
+      linear-gradient(rgba(0, 217, 255, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 217, 255, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    /* Optimize grid pattern - remove transforms that cause jitter */
+    contain: layout style paint;
+  }
+
+  /* Anti-jitter optimizations */
+  .scroll-smooth {
+    scroll-behavior: auto; /* Native scrolling only */
+    overscroll-behavior: contain;
+    contain: layout style;
+  }
+
+  /* Remove hardware acceleration that causes jitter */
+  .animate-optimized {
+    /* Remove problematic transforms */
+    transform: none;
+    will-change: auto;
+    contain: layout style;
+  }
+
+  /* Only use hardware acceleration for specific elements */
+  .force-gpu {
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+    isolation: isolate;
+  }
+
+  /* Header navigation improvements */
+  nav a {
+    position: relative;
+    display: inline-block;
+  }
+
+  /* Smooth transitions for all interactive elements */
+  a, button {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+  
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+
+  /* Performance utilities */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+
+  .smooth-scroll {
+    scroll-behavior: auto; /* Native only */
+    overscroll-behavior: contain;
+  }
+
+  .no-scroll-chain {
+    overscroll-behavior: none;
+  }
+
+  /* Ultra-smooth animations - no jitter */
+  .animate-fade-in-ultra {
+    animation: fadeInUltra 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .animate-slide-up-ultra {
+    animation: slideUpUltra 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  /* Jitter-free keyframes */
+  @keyframes fadeInUltra {
+    from { 
+      opacity: 0; 
+    }
+    to { 
+      opacity: 1; 
+    }
+  }
+
+  @keyframes slideUpUltra {
+    from { 
+      opacity: 0; 
+      transform: translate3d(0, 20px, 0); 
+    }
+    to { 
+      opacity: 1; 
+      transform: translate3d(0, 0, 0); 
+    }
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Remove jitter from Framer Motion */
+  [data-framer-motion] {
+    transform-origin: center center !important;
+  }
+
+  /* Eliminate subpixel rendering issues */
+  * {
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+  }
 }
