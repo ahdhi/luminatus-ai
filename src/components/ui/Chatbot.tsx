@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { MessageCircle, X, Send, Bot, User, Minimize2, Maximize2 } from 'lucide-react'
+import { MessageCircle, X, Send, Bot, User, Minimize2, Maximize2, Mic, MicOff, Volume2, VolumeX } from 'lucide-react'
 
 interface Message {
   id: string
@@ -25,11 +25,105 @@ export default function Chatbot() {
   ])
   const [inputValue, setInputValue] = useState('')
   const [isTyping, setIsTyping] = useState(false)
+  
+  // Voice recognition states
+  const [isListening, setIsListening] = useState(false)
+  const [isVoiceEnabled, setIsVoiceEnabled] = useState(true)
+  const [speechRecognition, setSpeechRecognition] = useState<any>(null)
+  const [speechSynthesis, setSpeechSynthesis] = useState<any>(null)
+  
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setMounted(true)
     console.log('Chatbot component mounted!')
+    
+    // Initialize speech recognition and synthesis
+    if (typeof window !== 'undefined') {
+      // Initialize Speech Recognition
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+      console.log('Speech Recognition available:', !!SpeechRecognition)
+      
+      if (SpeechRecognition) {
+        try {
+          const recognition = new SpeechRecognition()
+          recognition.continuous = false
+          recognition.interimResults = false
+          recognition.lang = 'en-US'
+          
+          recognition.onstart = () => {
+            console.log('Speech recognition started')
+            setIsListening(true)
+          }
+          
+          recognition.onresult = (event: any) => {
+            const transcript = event.results[0][0].transcript
+            console.log('Speech recognition result:', transcript)
+            setInputValue(transcript)
+            setIsListening(false)
+          }
+          
+          recognition.onerror = (event: any) => {
+            console.error('Speech recognition error:', event.error)
+            setIsListening(false)
+            
+            // Provide user-friendly error messages
+            let errorMessage = ''
+            switch (event.error) {
+              case 'network':
+                errorMessage = 'Network error. Please check your internet connection and try again.'
+                break
+              case 'not-allowed':
+                errorMessage = 'Microphone access denied. Please allow microphone permissions and try again.'
+                break
+              case 'no-speech':
+                errorMessage = 'No speech detected. Please try speaking again.'
+                break
+              case 'aborted':
+                errorMessage = 'Speech recognition was cancelled.'
+                break
+              case 'audio-capture':
+                errorMessage = 'No microphone detected. Please check your microphone and try again.'
+                break
+              case 'service-not-allowed':
+                errorMessage = 'Speech recognition service not available. Please use HTTPS or try a different browser.'
+                break
+              default:
+                errorMessage = `Speech recognition error: ${event.error}`
+            }
+            
+            // Show error message to user
+            const errorMsg: Message = {
+              id: Date.now().toString(),
+              text: `🎤 Voice Error: ${errorMessage}`,
+              isUser: false,
+              timestamp: new Date()
+            }
+            setMessages(prev => [...prev, errorMsg])
+          }
+          
+          recognition.onend = () => {
+            console.log('Speech recognition ended')
+            setIsListening(false)
+          }
+          
+          setSpeechRecognition(recognition)
+          console.log('Speech recognition initialized successfully')
+        } catch (error) {
+          console.error('Error initializing speech recognition:', error)
+        }
+      } else {
+        console.log('Speech Recognition not supported in this browser')
+      }
+      
+      // Initialize Speech Synthesis
+      if ((window as any).speechSynthesis) {
+        setSpeechSynthesis((window as any).speechSynthesis)
+        console.log('Speech synthesis initialized')
+      } else {
+        console.log('Speech synthesis not supported')
+      }
+    }
   }, [])
 
   useEffect(() => {
@@ -38,6 +132,74 @@ export default function Chatbot() {
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const startListening = () => {
+    if (!speechRecognition) {
+      alert('Voice recognition is not supported in your browser. Please use Chrome, Edge, or Safari.')
+      return
+    }
+
+    // Check if we're on HTTPS (required for speech recognition)
+    if (typeof window !== 'undefined' && window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
+      const errorMsg: Message = {
+        id: Date.now().toString(),
+        text: '🔒 Voice recognition requires HTTPS. Please access the site via HTTPS or use localhost for development.',
+        isUser: false,
+        timestamp: new Date()
+      }
+      setMessages(prev => [...prev, errorMsg])
+      return
+    }
+
+    if (!isListening) {
+      try {
+        speechRecognition.start()
+      } catch (error) {
+        console.error('Error starting speech recognition:', error)
+        const errorMsg: Message = {
+          id: Date.now().toString(),
+          text: '🎤 Could not start voice recognition. Please try again.',
+          isUser: false,
+          timestamp: new Date()
+        }
+        setMessages(prev => [...prev, errorMsg])
+      }
+    }
+  }
+
+  const stopListening = () => {
+    if (speechRecognition && isListening) {
+      speechRecognition.stop()
+    }
+  }
+
+  const speakMessage = (text: string) => {
+    if (speechSynthesis && isVoiceEnabled) {
+      // Stop any ongoing speech
+      speechSynthesis.cancel()
+      
+      // Clean text for better speech (remove emojis and special characters)
+      const cleanText = text.replace(/[^\w\s.,!?-]/g, ' ').replace(/\s+/g, ' ').trim()
+      
+      const utterance = new SpeechSynthesisUtterance(cleanText)
+      utterance.rate = 0.9
+      utterance.pitch = 1
+      utterance.volume = 0.8
+      
+      // Try to use a more natural voice
+      const voices = speechSynthesis.getVoices()
+      const preferredVoice = voices.find((voice: any) => 
+        voice.name.includes('Google') || 
+        voice.name.includes('Microsoft') ||
+        voice.name.includes('Natural')
+      )
+      if (preferredVoice) {
+        utterance.voice = preferredVoice
+      }
+      
+      speechSynthesis.speak(utterance)
+    }
   }
 
   const sendMessage = async () => {
@@ -50,7 +212,8 @@ export default function Chatbot() {
       timestamp: new Date()
     }
 
-    setMessages(prev => [...prev, userMessage])
+    const newMessages = [...messages, userMessage]
+    setMessages(newMessages)
     setInputValue('')
     setIsTyping(true)
 
@@ -60,7 +223,10 @@ export default function Chatbot() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message: inputValue }),
+        body: JSON.stringify({ 
+          message: inputValue,
+          history: newMessages // Send conversation history
+        }),
       })
 
       const data = await response.json()
@@ -87,6 +253,11 @@ export default function Chatbot() {
       }
 
       setMessages(prev => [...prev, botMessage])
+      
+      // Speak the bot's response if voice is enabled
+      if (isVoiceEnabled && botMessageText) {
+        setTimeout(() => speakMessage(botMessageText), 500) // Small delay for better UX
+      }
     } catch (error) {
       console.error('Error sending message:', error)
       const errorMessage: Message = {
@@ -171,6 +342,13 @@ export default function Chatbot() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setIsVoiceEnabled(!isVoiceEnabled)}
+                    className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+                    title={isVoiceEnabled ? "Disable voice" : "Enable voice"}
+                  >
+                    {isVoiceEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
+                  </button>
                   <button
                     onClick={() => setIsMinimized(!isMinimized)}
                     className="p-2 hover:bg-white/10 rounded-lg transition-colors"
@@ -272,10 +450,52 @@ export default function Chatbot() {
                         value={inputValue}
                         onChange={(e) => setInputValue(e.target.value)}
                         onKeyPress={handleKeyPress}
-                        placeholder="Ask Appu anything..."
+                        placeholder="Ask Appu anything... or use voice 🎤"
                         className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-neon-blue/50 transition-colors"
                         disabled={isTyping}
                       />
+                      
+                      {/* Voice Recognition Button */}
+                      <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => {
+                          if (!speechRecognition) {
+                            const errorMsg: Message = {
+                              id: Date.now().toString(),
+                              text: '🎤 Voice recognition is not supported in your browser. Please use Chrome, Edge, or Safari with HTTPS.',
+                              isUser: false,
+                              timestamp: new Date()
+                            }
+                            setMessages(prev => [...prev, errorMsg])
+                            return
+                          }
+                          
+                          if (isListening) {
+                            stopListening()
+                          } else {
+                            startListening()
+                          }
+                        }}
+                        disabled={isTyping}
+                        className={`w-10 h-10 rounded-xl flex items-center justify-center text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 ${
+                          isListening 
+                            ? 'bg-red-500 animate-pulse' 
+                            : speechRecognition 
+                              ? 'bg-gradient-to-r from-green-500 to-emerald-500'
+                              : 'bg-gray-500'
+                        }`}
+                        title={
+                          !speechRecognition 
+                            ? "Voice recognition not supported (requires HTTPS and Chrome/Edge/Safari)" 
+                            : isListening 
+                              ? "Stop listening" 
+                              : "Start voice input"
+                        }
+                      >
+                        {isListening ? <MicOff size={16} /> : <Mic size={16} />}
+                      </motion.button>
+                      
                       <motion.button
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
@@ -289,6 +509,25 @@ export default function Chatbot() {
                         <Send size={16} />
                       </motion.button>
                     </div>
+                    
+                    {/* Voice Status Indicator */}
+                    {isListening && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="mt-2 text-center"
+                      >
+                        <div className="flex items-center justify-center gap-2 text-green-400">
+                          <motion.div
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 1, repeat: Infinity }}
+                          >
+                            <Mic size={16} />
+                          </motion.div>
+                          <span className="text-sm">Listening...</span>
+                        </div>
+                      </motion.div>
+                    )}
                   </div>
                 </>
               )}

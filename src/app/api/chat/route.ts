@@ -6,7 +6,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '')
 
 export async function POST(request: NextRequest) {
   try {
-    const { message } = await request.json()
+    const { message, history } = await request.json()
 
     if (!message) {
       return NextResponse.json(
@@ -25,7 +25,24 @@ export async function POST(request: NextRequest) {
     // Create model instance
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
 
-    // Create Appu's personality prompt
+    // Build conversation history for context
+    let conversationContext = ''
+    if (history && history.length > 0) {
+      conversationContext = '\n\nConversation History:\n'
+      // Include last 10 messages for context (to avoid token limits)
+      const recentHistory = history.slice(-50) // Adjusted to 50 for more context
+      // Use the last 50 messages for context
+      recentHistory.forEach((msg: any, index: number) => {
+        if (msg.isUser) {
+          conversationContext += `User: ${msg.text}\n`
+        } else {
+          conversationContext += `Appu: ${msg.text}\n`
+        }
+      })
+      conversationContext += '\n'
+    }
+
+    // Create Appu's personality prompt with conversation context
     const personalityPrompt = `You are Appu, the witty AI assistant for Luminatus AI company. 
 
 About Luminatus AI:
@@ -40,10 +57,11 @@ Your personality:
 - Be helpful but keep responses concise (2-3 sentences max)
 - Always stay in character as Appu
 - If asked about Luminatus AI, be enthusiastic about our services
+- Remember the conversation context and refer to it when relevant${conversationContext}
 
-User message: "${message}"
+Current user message: "${message}"
 
-Respond as Appu:`
+Respond as Appu, considering the conversation history above:`
 
     // Increase timeout and add retry logic
     const maxRetries = 2
