@@ -17,7 +17,7 @@ export default function Home() {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-20 space-y-0">
+      <div className="relative z-20 space-y-0" style={{ position: 'relative' }}>
         <Hero />
         <About />
         <Services />
@@ -27,8 +27,8 @@ export default function Home() {
         <Footer />
       </div>
 
-      {/* Floating Particles Effect - Hidden on mobile for performance */}
-      <div className="fixed inset-0 pointer-events-none z-10 hidden md:block">
+      {/* Floating Particles Effect */}
+      <div className="fixed inset-0 pointer-events-none z-10">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-neon-blue/20 rounded-full blur-3xl animate-float" />
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-neon-purple/20 rounded-full blur-3xl animate-float animation-delay-400" />
       </div>

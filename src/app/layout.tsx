@@ -28,11 +28,6 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: 'Luminatus AI - Where Intelligence Becomes Infinite',
   description: 'Advanced AI solutions for the future',
-  icons: {
-    icon: '/Logo.png',
-    shortcut: '/Logo.png',
-    apple: '/Logo.png',
-  },
 }
 
 export default function RootLayout({
@@ -43,9 +38,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${outfit.variable} ${jetbrainsMono.variable}`}>
-        <Chatbot />
         <Header />
         {children}
+        <Chatbot />
       </body>
     </html>
   )

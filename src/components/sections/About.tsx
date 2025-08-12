@@ -2,7 +2,7 @@
 
 'use client'
 
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import { Brain, Cpu, Globe, Layers, Shield, Zap } from 'lucide-react'
 import GlowingText from '@/components/ui/GlowingText'
@@ -49,11 +49,26 @@ const features = [
 
 export default function About() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const [isClient, setIsClient] = useState(false)
   const isInView = useInView(containerRef, { 
     once: false, 
     amount: 0.1, 
     margin: "200px 0px -100px 0px" 
   })
+
+  // Generate stable particle positions on client-side only
+  const [particlePositions] = useState(() => {
+    if (typeof window === 'undefined') return []
+    return Array.from({ length: 15 }, (_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+    }))
+  })
+
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
   
   // Remove scroll-based animations that might cause layout issues
   // const { scrollYProgress } = useScroll({
@@ -69,6 +84,7 @@ export default function About() {
       id="about"
       ref={containerRef}
       className="relative py-16 overflow-hidden"
+      style={{ position: 'relative' }}
     >
       {/* Background Effects */}
       <div className="absolute inset-0">
@@ -129,13 +145,13 @@ export default function About() {
                   animate={isInView ? { opacity: 1 } : {}}
                   transition={{ duration: 0.8, delay: 1 }}
                 >
-                  {[...Array(15)].map((_, i) => (
+                  {isClient && particlePositions.map((particle) => (
                     <motion.div
-                      key={i}
+                      key={particle.id}
                       className="absolute w-1 h-1 bg-neon-blue rounded-full"
                       style={{
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`,
+                        left: `${particle.left}%`,
+                        top: `${particle.top}%`,
                       }}
                       animate={{
                         scale: [0, 1, 0],
@@ -144,9 +160,9 @@ export default function About() {
                       }}
                       transition={{
                         duration: 2,
-                        delay: 1.2 + Math.random() * 2,
+                        delay: 1.2 + particle.id * 0.1,
                         repeat: Infinity,
-                        repeatDelay: Math.random() * 3,
+                        repeatDelay: particle.id * 0.3,
                       }}
                     />
                   ))}
