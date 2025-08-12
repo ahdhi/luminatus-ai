@@ -7,7 +7,6 @@ import { motion, useScroll, useTransform, useInView } from 'framer-motion'
 import { Brain, Cpu, Globe, Layers, Shield, Zap } from 'lucide-react'
 import GlowingText from '@/components/ui/GlowingText'
 import FadeIn from '@/components/animations/FadeIn'
-import AITextReveal from '@/components/animations/AITextReveal'
 
 const features = [
   {
@@ -50,7 +49,11 @@ const features = [
 
 export default function About() {
   const containerRef = useRef<HTMLDivElement>(null)
-  const isInView = useInView(containerRef, { once: false, amount: 0.2, margin: "-50px" })
+  const isInView = useInView(containerRef, { 
+    once: false, 
+    amount: 0.1, 
+    margin: "200px 0px -100px 0px" 
+  })
   
   // Remove scroll-based animations that might cause layout issues
   // const { scrollYProgress } = useScroll({
@@ -65,7 +68,7 @@ export default function About() {
     <section
       id="about"
       ref={containerRef}
-      className="relative py-12 sm:py-16 lg:py-20 overflow-hidden"
+      className="relative py-16 overflow-hidden"
     >
       {/* Background Effects */}
       <div className="absolute inset-0">
@@ -75,49 +78,180 @@ export default function About() {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="container mx-auto px-6 relative z-10">
         {/* Section Header */}
-        <FadeIn duration={0.4} delay={0} once={false}>
-          <div className="text-center mb-12 sm:mb-16 lg:mb-20">
+        <FadeIn>
+          <div className="text-center mb-20">
             <motion.span
               initial={{ opacity: 0, scale: 0.8 }}
               animate={isInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.3 }}
-              className="inline-block px-3 py-2 mb-4 sm:mb-6 text-xs sm:text-sm font-medium text-neon-blue border border-neon-blue/30 rounded-full glass-effect"
+              transition={{ duration: 0.5 }}
+              className="inline-block px-4 py-2 mb-6 text-sm font-medium text-neon-blue border border-neon-blue/30 rounded-full glass-effect"
             >
               ABOUT LUMINATUS
             </motion.span>
             
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-display font-bold mb-4 sm:mb-6">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-6">
               <motion.span
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.6, delay: 0.2 }}
+                transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
                 className="block"
               >
                 Redefining the Boundaries of
               </motion.span>
-              <AITextReveal 
-                text="Artificial Intelligence" 
-                className="block mt-2 text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-display font-bold"
-                delay={0.2}
-              />
+              
+              <motion.div 
+                className="block mt-2 relative"
+                initial={{ opacity: 0 }}
+                animate={isInView ? { opacity: 1 } : {}}
+                transition={{ duration: 0.5, delay: 0.5 }}
+              >
+                {/* Glowing background effect */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-neon-blue/30 via-neon-purple/30 to-neon-pink/30 blur-2xl rounded-lg"
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={isInView ? { 
+                    scale: [0, 1.2, 1], 
+                    opacity: [0, 0.8, 0.5] 
+                  } : {}}
+                  transition={{ 
+                    duration: 1.5, 
+                    delay: 0.7,
+                    ease: "easeOut"
+                  }}
+                />
+                
+                {/* Particle effects */}
+                <motion.div
+                  className="absolute inset-0 pointer-events-none"
+                  initial={{ opacity: 0 }}
+                  animate={isInView ? { opacity: 1 } : {}}
+                  transition={{ duration: 0.8, delay: 1 }}
+                >
+                  {[...Array(15)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute w-1 h-1 bg-neon-blue rounded-full"
+                      style={{
+                        left: `${Math.random() * 100}%`,
+                        top: `${Math.random() * 100}%`,
+                      }}
+                      animate={{
+                        scale: [0, 1, 0],
+                        opacity: [0, 1, 0],
+                        y: [0, -20],
+                      }}
+                      transition={{
+                        duration: 2,
+                        delay: 1.2 + Math.random() * 2,
+                        repeat: Infinity,
+                        repeatDelay: Math.random() * 3,
+                      }}
+                    />
+                  ))}
+                </motion.div>
+                
+                {/* Main text with enhanced effects */}
+                <motion.span
+                  className="relative z-10"
+                  initial={{ 
+                    opacity: 0, 
+                    scale: 0.8, 
+                    rotateX: -15,
+                    filter: "blur(10px)"
+                  }}
+                  animate={isInView ? { 
+                    opacity: 1, 
+                    scale: 1, 
+                    rotateX: 0,
+                    filter: "blur(0px)"
+                  } : {}}
+                  transition={{ 
+                    duration: 1.2, 
+                    delay: 0.8,
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 15
+                  }}
+                  style={{ transformOrigin: 'center bottom' }}
+                >
+                  <span 
+                    className="text-transparent bg-clip-text bg-gradient-to-r from-neon-blue via-neon-purple to-neon-pink"
+                    style={{
+                      filter: 'drop-shadow(0 0 20px rgba(168, 85, 247, 0.6)) drop-shadow(0 0 40px rgba(59, 130, 246, 0.4))',
+                      textShadow: '0 0 30px rgba(236, 72, 153, 0.5)'
+                    }}
+                  >
+                    <motion.span
+                      animate={isInView ? {
+                        backgroundPosition: ['0% 50%', '100% 50%', '0% 50%'],
+                      } : {}}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "linear",
+                        delay: 1.5
+                      }}
+                      style={{
+                        backgroundSize: '200% 200%',
+                        background: 'linear-gradient(45deg, #3b82f6, #8b5cf6, #ec4899, #06b6d4, #3b82f6)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent'
+                      }}
+                    >
+                      Artificial Intelligence
+                    </motion.span>
+                  </span>
+                </motion.span>
+
+                {/* Energy burst effect */}
+                <motion.div
+                  className="absolute inset-0 pointer-events-none"
+                  initial={{ opacity: 0 }}
+                  animate={isInView ? { opacity: [0, 1, 0] } : {}}
+                  transition={{ duration: 0.8, delay: 1.5 }}
+                >
+                  {[...Array(8)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute w-px h-12 bg-gradient-to-t from-transparent via-neon-blue to-transparent"
+                      style={{
+                        left: '50%',
+                        top: '50%',
+                        transformOrigin: 'bottom',
+                        rotate: `${i * 45}deg`,
+                      }}
+                      initial={{ scaleY: 0, opacity: 0 }}
+                      animate={isInView ? { 
+                        scaleY: [0, 1.5, 0], 
+                        opacity: [0, 1, 0] 
+                      } : {}}
+                      transition={{
+                        duration: 1,
+                        delay: 1.6 + i * 0.1,
+                        ease: "easeOut"
+                      }}
+                    />
+                  ))}
+                </motion.div>
+              </motion.div>
             </h2>
             
-            <p className="text-base sm:text-lg md:text-xl text-gray-400 max-w-3xl mx-auto px-4 sm:px-0">
-              We&apos;re not just building AI systems; we&apos;re crafting the cognitive infrastructure 
-              that will power tomorrow&apos;s innovations and unlock human potential at an unprecedented scale.
+            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+              We're not just building AI systems; we're crafting the cognitive infrastructure 
+              that will power tomorrow's innovations and unlock human potential at an unprecedented scale.
             </p>
           </div>
         </FadeIn>
 
         {/* Features Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-12 sm:mb-16 lg:mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20">
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
               initial={{ opacity: 0, y: 50 }}
-              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+              animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               whileHover={{ scale: 1.05, rotateY: 5 }}
               className="group relative"
@@ -151,7 +285,7 @@ export default function About() {
         {/* Mission Statement */}
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
-          animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.9 }}
+          animate={isInView ? { opacity: 1, scale: 1 } : {}}
           transition={{ duration: 0.8 }}
           className="relative max-w-5xl mx-auto"
         >
@@ -173,14 +307,14 @@ export default function About() {
               {/* Stats */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
                 {[
-                  { value: '2024', label: 'Founded' },
-                  { value: '50+', label: 'AI Engineers' },
-                  { value: '100+', label: 'Users Worldwide' },
+                  { value: '2021', label: 'Founded' },
+                  { value: '500+', label: 'AI Engineers' },
+                  { value: '10M+', label: 'Users Worldwide' },
                 ].map((stat, index) => (
                   <motion.div
                     key={stat.label}
                     initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : {}}
                     transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
                   >
                     <div className="text-4xl font-bold bg-gradient-to-r from-neon-blue to-neon-purple bg-clip-text text-transparent">
