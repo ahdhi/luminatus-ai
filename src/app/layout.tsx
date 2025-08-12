@@ -28,6 +28,11 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: 'Luminatus AI - Where Intelligence Becomes Infinite',
   description: 'Advanced AI solutions for the future',
+  icons: {
+    icon: '/Logo.png',
+    shortcut: '/Logo.png',
+    apple: '/Logo.png',
+  },
 }
 
 export default function RootLayout({

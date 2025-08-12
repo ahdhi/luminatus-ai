@@ -10,7 +10,7 @@ export default function Contact() {
           </p>
           <div className="space-y-4">
             <a 
-              href="mailto:contact@luminatus.ai" 
+              href="mailto:hello@luminatus.ai" 
               className="inline-block px-6 py-3 bg-gradient-to-r from-neon-blue to-neon-purple text-white rounded-lg hover:scale-105 transition-transform duration-300"
             >
               Contact Us
