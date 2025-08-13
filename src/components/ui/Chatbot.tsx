@@ -11,6 +11,38 @@ interface Message {
   timestamp: Date
 }
 
+// Speech Recognition types
+interface SpeechRecognitionEvent {
+  results: {
+    [key: number]: {
+      [key: number]: {
+        transcript: string
+      }
+    }
+  }
+}
+
+interface SpeechRecognitionErrorEvent {
+  error: string
+}
+
+interface SpeechRecognition {
+  continuous: boolean
+  interimResults: boolean
+  lang: string
+  start(): void
+  stop(): void
+  onstart: (() => void) | null
+  onresult: ((event: SpeechRecognitionEvent) => void) | null
+  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null
+  onend: (() => void) | null
+}
+
+interface WindowWithSpeech extends Window {
+  SpeechRecognition?: new () => SpeechRecognition
+  webkitSpeechRecognition?: new () => SpeechRecognition
+}
+
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(true) // Auto-open on load
   const [isMinimized, setIsMinimized] = useState(false)
@@ -29,8 +61,8 @@ export default function Chatbot() {
   // Voice recognition states
   const [isListening, setIsListening] = useState(false)
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(true)
-  const [speechRecognition, setSpeechRecognition] = useState<any>(null)
-  const [speechSynthesis, setSpeechSynthesis] = useState<any>(null)
+  const [speechRecognition, setSpeechRecognition] = useState<SpeechRecognition | null>(null)
+  const [speechSynthesis, setSpeechSynthesis] = useState<SpeechSynthesis | null>(null)
   
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -41,7 +73,8 @@ export default function Chatbot() {
     // Initialize speech recognition and synthesis
     if (typeof window !== 'undefined') {
       // Initialize Speech Recognition
-      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+      const windowWithSpeech = window as WindowWithSpeech
+      const SpeechRecognition = windowWithSpeech.SpeechRecognition || windowWithSpeech.webkitSpeechRecognition
       console.log('Speech Recognition available:', !!SpeechRecognition)
       
       if (SpeechRecognition) {
@@ -56,14 +89,14 @@ export default function Chatbot() {
             setIsListening(true)
           }
           
-          recognition.onresult = (event: any) => {
+          recognition.onresult = (event: SpeechRecognitionEvent) => {
             const transcript = event.results[0][0].transcript
             console.log('Speech recognition result:', transcript)
             setInputValue(transcript)
             setIsListening(false)
           }
           
-          recognition.onerror = (event: any) => {
+          recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
             console.error('Speech recognition error:', event.error)
             setIsListening(false)
             
@@ -117,8 +150,8 @@ export default function Chatbot() {
       }
       
       // Initialize Speech Synthesis
-      if ((window as any).speechSynthesis) {
-        setSpeechSynthesis((window as any).speechSynthesis)
+      if (window.speechSynthesis) {
+        setSpeechSynthesis(window.speechSynthesis)
         console.log('Speech synthesis initialized')
       } else {
         console.log('Speech synthesis not supported')
@@ -189,7 +222,7 @@ export default function Chatbot() {
       
       // Try to use a more natural voice
       const voices = speechSynthesis.getVoices()
-      const preferredVoice = voices.find((voice: any) => 
+      const preferredVoice = voices.find((voice: SpeechSynthesisVoice) => 
         voice.name.includes('Google') || 
         voice.name.includes('Microsoft') ||
         voice.name.includes('Natural')
