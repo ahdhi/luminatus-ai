@@ -3,9 +3,8 @@
 'use client'
 
 import { useRef, useState, useEffect } from 'react'
-import { motion, useScroll, useTransform, useInView } from 'framer-motion'
+import { motion, useInView } from 'framer-motion'
 import { Brain, Cpu, Globe, Layers, Shield, Zap } from 'lucide-react'
-import GlowingText from '@/components/ui/GlowingText'
 import FadeIn from '@/components/animations/FadeIn'
 
 const features = [
@@ -255,8 +254,8 @@ export default function About() {
             </h2>
             
             <p className="text-xl text-gray-400 max-w-3xl mx-auto">
-              We're not just building AI systems; we're crafting the cognitive infrastructure 
-              that will power tomorrow's innovations and unlock human potential at an unprecedented scale.
+              We&apos;re not just building AI systems; we&apos;re crafting the cognitive infrastructure 
+              that will power tomorrow&apos;s innovations and unlock human potential at an unprecedented scale.
             </p>
           </div>
         </FadeIn>

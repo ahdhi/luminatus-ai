@@ -3,7 +3,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import { 
   Brain, 
   Zap, 
@@ -22,7 +22,37 @@ import FadeIn from '@/components/animations/FadeIn'
 import Card from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
 
-const features = [
+interface DemoData {
+  type: string
+  nodes?: number
+  connections?: number
+  requests?: number
+  latency?: string
+  threats?: number
+  blocked?: string
+  encryption?: string
+  compliance?: string
+  tasks?: number
+  efficiency?: string
+  accuracy?: string
+  timeframe?: string
+  models?: number
+  deployment?: string
+  capacity?: string
+  regions?: string | number
+}
+
+interface Feature {
+  id: string
+  icon: React.ComponentType<{ className?: string }>
+  title: string
+  description: string
+  color: string
+  details: string[]
+  demo: DemoData
+}
+
+const features: Feature[] = [
   {
     id: 'neural-processing',
     icon: Brain,
@@ -141,7 +171,6 @@ const additionalFeatures = [
 ]
 
 export default function Features() {
-  const [activeFeature, setActiveFeature] = useState(0)
   const [hoveredCard, setHoveredCard] = useState<number | null>(null)
 
   const containerVariants = {
@@ -164,7 +193,7 @@ export default function Features() {
   }
 
   return (
-    <section id="features" className="py-12 sm:py-16 lg:py-20 xl:py-32 relative overflow-hidden">
+    <section id="features" className="py-32 relative overflow-hidden">
       {/* Background Effects */}
       <div className="absolute inset-0 bg-gradient-to-b from-gray-900/50 via-black to-gray-900/50" />
       <div className="absolute inset-0 grid-pattern opacity-5" />
@@ -173,15 +202,15 @@ export default function Features() {
       <div className="absolute top-20 left-10 w-32 h-32 bg-neon-blue/10 rounded-full blur-3xl animate-float" />
       <div className="absolute bottom-20 right-10 w-40 h-40 bg-neon-purple/10 rounded-full blur-3xl animate-float animation-delay-400" />
 
-      <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative z-10 container mx-auto px-6">
         {/* Header */}
         <FadeIn>
-          <div className="text-center mb-12 sm:mb-16 lg:mb-20">
+          <div className="text-center mb-20">
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-3 py-2 mb-4 sm:mb-6 glass-effect rounded-full border border-neon-blue/30"
+              className="inline-flex items-center gap-2 px-4 py-2 mb-6 glass-effect rounded-full border border-neon-blue/30"
             >
               <Sparkles className="w-4 h-4 text-neon-blue" />
               <span className="text-sm text-gray-300">Revolutionary Features</span>
@@ -272,11 +301,11 @@ export default function Features() {
                       {feature.demo.type === 'speed' && (
                         <>
                           <div>
-                            <div className="text-xl font-bold text-yellow-400">{(feature.demo as { requests?: number }).requests?.toLocaleString()}</div>
+                            <div className="text-xl font-bold text-yellow-400">{feature.demo.requests?.toLocaleString()}</div>
                             <div className="text-xs text-gray-400">Req/sec</div>
                           </div>
                           <div>
-                            <div className="text-xl font-bold text-orange-400">{(feature.demo as { latency?: string }).latency}</div>
+                            <div className="text-xl font-bold text-orange-400">{feature.demo.latency}</div>
                             <div className="text-xs text-gray-400">Latency</div>
                           </div>
                         </>
@@ -296,11 +325,11 @@ export default function Features() {
                       {feature.demo.type === 'automation' && (
                         <>
                           <div>
-                            <div className="text-xl font-bold text-purple-400">{(feature.demo as { tasks?: number }).tasks?.toLocaleString()}</div>
+                            <div className="text-xl font-bold text-purple-400">{feature.demo.tasks?.toLocaleString()}</div>
                             <div className="text-xs text-gray-400">Tasks/day</div>
                           </div>
                           <div>
-                            <div className="text-xl font-bold text-pink-400">{(feature.demo as { efficiency?: string }).efficiency}</div>
+                            <div className="text-xl font-bold text-pink-400">{feature.demo.efficiency}</div>
                             <div className="text-xs text-gray-400">Efficiency</div>
                           </div>
                         </>

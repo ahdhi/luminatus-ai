@@ -15,7 +15,6 @@ export default function OptimizedSmoothScroll({
 }: SmoothScrollProps) {
   const containerRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
-  const [scrollY, setScrollY] = useState(0)
   const [targetScrollY, setTargetScrollY] = useState(0)
   const rafRef = useRef<number | null>(null)
 
@@ -25,7 +24,6 @@ export default function OptimizedSmoothScroll({
     
     if (!container || !content) return
 
-    let isScrolling = false
     let scrollTimeout: NodeJS.Timeout
 
     // Set initial height
@@ -37,7 +35,6 @@ export default function OptimizedSmoothScroll({
 
     // Optimized scroll handler with throttling
     const handleScroll = () => {
-      isScrolling = true
       setTargetScrollY(window.scrollY)
       
       // Clear existing timeout
@@ -45,13 +42,13 @@ export default function OptimizedSmoothScroll({
       
       // Set a timeout to detect when scrolling stops
       scrollTimeout = setTimeout(() => {
-        isScrolling = false
+        // Scrolling stopped
       }, 100)
     }
 
     // Smooth animation loop
     const animate = () => {
-      setScrollY(prev => {
+      setTargetScrollY((prev: number) => {
         const diff = targetScrollY - prev
         const newY = prev + diff * smoothness
         

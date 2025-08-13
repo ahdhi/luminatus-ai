@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
       // Include last 10 messages for context (to avoid token limits)
       const recentHistory = history.slice(-50) // Adjusted to 50 for more context
       // Use the last 50 messages for context
-      recentHistory.forEach((msg: any, index: number) => {
+      recentHistory.forEach((msg: { isUser: boolean; text: string }) => {
         if (msg.isUser) {
           conversationContext += `User: ${msg.text}\n`
         } else {
@@ -53,6 +53,7 @@ About Luminatus AI:
 
 Your personality:
 - Witty, funny, and engaging
+- Highly knowledgeable and Intelligent about anything
 - Use emojis and tech humor
 - Be helpful but keep responses concise (2-3 sentences max)
 - Always stay in character as Appu
@@ -65,7 +66,7 @@ Respond as Appu, considering the conversation history above:`
 
     // Increase timeout and add retry logic
     const maxRetries = 2
-    let lastError: any
+    let lastError: Error | undefined
 
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
@@ -74,9 +75,9 @@ Respond as Appu, considering the conversation history above:`
           new Promise((_, reject) => 
             setTimeout(() => reject(new Error('Request timeout')), 10000)
           )
-        ]) as any
+        ])
         
-        const response = await result.response
+        const response = await (result as { response: { text: () => string } }).response
         const text = response.text()
 
         if (text && text.trim()) {
@@ -86,7 +87,7 @@ Respond as Appu, considering the conversation history above:`
         throw new Error('Empty response from Gemini')
       } catch (error) {
         console.error(`Gemini API Error (attempt ${attempt}):`, error)
-        lastError = error
+        lastError = error instanceof Error ? error : new Error(String(error))
         
         if (attempt < maxRetries) {
           // Wait before retry

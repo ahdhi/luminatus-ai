@@ -80,12 +80,6 @@ export default function LightweightSmoothScroll({ children }: { children: React.
     document.documentElement.style.scrollBehavior = 'auto'
     document.body.style.scrollBehavior = 'auto'
 
-    // Disable all wheel event listeners that might interfere
-    const preventDefaultWheel = (e: WheelEvent) => {
-      // Allow native scrolling - don't prevent default
-      return true
-    }
-
     // Use passive listeners for maximum performance
     const passiveOptions = { passive: true, capture: false }
     
